@@ -1,3 +1,4 @@
+
 terraform {
   required_providers {
     azurerm = {
@@ -13,7 +14,7 @@ terraform {
     organization = "dipakgawade37"
  
     workspaces {
-      name = "terrafrom"
+      name = "demo1"
     }
   }
 }
@@ -27,3 +28,4 @@ provider "azurerm" {
   features {} # Required for azurerm provider
 }
  
+

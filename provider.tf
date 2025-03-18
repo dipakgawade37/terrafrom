@@ -14,7 +14,7 @@ terraform {
     organization = "dipakgawade37"
  
     workspaces {
-      name = "demo1"
+      name = "terrafrom"
     }
   }
 }

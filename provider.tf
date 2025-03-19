@@ -7,19 +7,19 @@ terraform {
     }
   }
 }
- 
+
 terraform {
   cloud {
-   
+
     organization = "dipakgawade37"
- 
+
     workspaces {
       name = "terrafrom"
     }
   }
 }
- 
- 
+
+
 provider "azurerm" {
   subscription_id = var.sub_id
   client_id       = var.client_id
@@ -27,5 +27,5 @@ provider "azurerm" {
   tenant_id       = var.tenant_id
   features {} # Required for azurerm provider
 }
- 
+
 

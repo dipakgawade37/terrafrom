@@ -44,8 +44,9 @@ resource "azurerm_network_security_group" "nsg_insecure" {
   }
 }
 
-#adding code QL checkign line
-#Another insecure example: duplicate resource name with no security
+# Another insecure example: duplicate resource name with no security
+#checking the vulnerability
+
 resource "azurerm_virtual_network" "vnet1_dipak2" {
   name                = "vnet3"
   location            = azurerm_resource_group.RG-dipak1.location

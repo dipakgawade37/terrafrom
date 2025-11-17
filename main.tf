@@ -54,19 +54,13 @@ resource "azurerm_network_interface" "nic" {
 }
 
 
-resource "azurerm_public_ip" "vm_public_ip" {
-  name                = "vm-public-ip"
-  location            = azurerm_resource_group.RG-dipak1.location
-  resource_group_name = azurerm_resource_group.RG-dipak1.name
-
-  sku                 = "Basic"        # Standard does NOT allow Dynamic
-  allocation_method   = "Dynamic"      # OK now
-
-  tags = {
-    Environment = "Development"
-    Owner       = "Dipak"
+  resource "azurerm_public_ip" "vm_public_ip" {
+    name                = "dipak-public-ip"
+    location            = azurerm_resource_group.RG-dipak1.location
+    resource_group_name = azurerm_resource_group.RG-dipak1.name
+    allocation_method   = "Dynamic"
+    sku                 = "Basic"
   }
-}
 
 
 resource "azurerm_linux_virtual_machine" "vm" {

@@ -10,9 +10,14 @@ resource "azurerm_resource_group" "rg" {
 
 resource "azurerm_virtual_network" "vnet" {
   name                = "vnet1"
-  address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
+  address_space       = ["10.0.0.0/16"]
+
+  tags = {
+    Environment = "Development"
+    Owner       = "Dipak"
+  }
 }
 
 resource "azurerm_subnet" "subnet" {
@@ -23,12 +28,12 @@ resource "azurerm_subnet" "subnet" {
 }
 
 resource "azurerm_network_security_group" "nsg" {
-  name                = "nsg-ssh"
+  name                = "nsg-allow-ssh"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
   security_rule {
-    name                       = "Allow-SSH"
+    name                       = "AllowSSH"
     priority                   = 100
     direction                  = "Inbound"
     access                     = "Allow"
@@ -41,7 +46,7 @@ resource "azurerm_network_security_group" "nsg" {
 }
 
 resource "azurerm_network_interface" "nic" {
-  name                = "vm-nic"
+  name                = "vmnic1"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
@@ -53,29 +58,29 @@ resource "azurerm_network_interface" "nic" {
   }
 }
 
-
-  resource "azurerm_public_ip" "vm_public_ip" {
-    name                = "dipak-public-ip"
-    location            = azurerm_resource_group.RG-dipak1.location
-    resource_group_name = azurerm_resource_group.RG-dipak1.name
-    allocation_method   = "Dynamic"
-    sku                 = "Basic"
-  }
-
+resource "azurerm_public_ip" "vm_public_ip" {
+  name                = "public-ip"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  allocation_method   = "Static" # Required for Standard SKU
+  sku                 = "Standard"
+}
 
 resource "azurerm_linux_virtual_machine" "vm" {
-  name                = "dipak-free-tier-vm"
+  name                = "dipakvm"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  size                = "Standard_B1s" # Free Tier eligible
-  admin_username      = var.admin_username
+  size                = "Standard_B1s"
+
+  admin_username = "azureuser"
+
   network_interface_ids = [
     azurerm_network_interface.nic.id
   ]
 
   admin_ssh_key {
-    username   = var.admin_username
-    public_key = file(var.ssh_public_key_path)
+    username   = "azureuser"
+    public_key = file("${path.module}/ssh/id_rsa.pub")
   }
 
   os_disk {
@@ -85,13 +90,8 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
   source_image_reference {
     publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-focal"
-    sku       = "20_04-lts"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts"
     version   = "latest"
-  }
-
-  tags = {
-    Environment = "Development"
-    Owner       = "Dipak"
   }
 }

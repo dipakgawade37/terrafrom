@@ -1,4 +1,3 @@
-
 terraform {
   required_providers {
     azurerm = {
@@ -6,11 +5,8 @@ terraform {
       version = "4.22.0"
     }
   }
-}
 
-terraform {
   cloud {
-
     organization = "dipakgawade37"
 
     workspaces {
@@ -19,13 +15,10 @@ terraform {
   }
 }
 
-
 provider "azurerm" {
   subscription_id = var.sub_id
   client_id       = var.client_id
   client_secret   = var.client_secret
   tenant_id       = var.tenant_id
-  features {} # Required for azurerm provider
+  features {}
 }
-
-

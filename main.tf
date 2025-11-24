@@ -45,6 +45,14 @@ resource "azurerm_network_security_group" "nsg" {
   }
 }
 
+resource "azurerm_public_ip" "vm_public_ip" {
+  name                = "public-ip"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  allocation_method   = "Dynamic"  # Dynamic requires Basic SKU
+  sku                 = "Basic"
+}
+
 resource "azurerm_network_interface" "nic" {
   name                = "vmnic1"
   location            = azurerm_resource_group.rg.location
@@ -57,15 +65,6 @@ resource "azurerm_network_interface" "nic" {
     public_ip_address_id          = azurerm_public_ip.vm_public_ip.id
   }
 }
-
-resource "azurerm_public_ip" "vm_public_ip" {
-  name                = "public-ip"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  allocation_method   = "Dynamic"  # Make it Dynamic
-  sku                 = "Basic"    # Required for Dynamic allocation
-}
-
 
 resource "azurerm_linux_virtual_machine" "vm" {
   name                = "dipakvm"
